@@ -3,6 +3,9 @@ package nl.tweeenveertig.cassandra.poc.app;
 import com.datastax.driver.core.Cluster;
 import info.archinnov.achilles.persistence.PersistenceManager;
 import info.archinnov.achilles.persistence.PersistenceManagerFactory;
+import info.archinnov.achilles.type.Counter;
+import info.archinnov.achilles.type.CounterBuilder;
+import nl.tweeenveertig.cassandra.poc.models.InfoCounter;
 import nl.tweeenveertig.cassandra.poc.models.LogFile;
 import nl.tweeenveertig.cassandra.poc.util.LogFileRegexDateWrapper;
 import nl.tweeenveertig.cassandra.poc.util.LogFileRegexDateWrapper.LogFileType;
@@ -39,6 +42,17 @@ public class Main {
             Matcher matcher;
             while((cur = br.readLine()) != null) {
                 LogFile log = new LogFile();
+                InfoCounter count = new InfoCounter();
+                System.out.println("Counter made");
+                count.setName("log.txt-20.log");
+                Counter infoCount = count.getInfo() != null ? count.getInfo() : CounterBuilder.incr(0L);
+                System.out.println("Countinfo retrieved");
+                if(cur.contains("INFO")) {
+                    System.out.println("Attempting to update count");
+                    infoCount.incr();
+                    System.out.println("Count incremented");
+                }
+                count.setInfo(CounterBuilder.incr(infoCount.get() != null ? infoCount.get() : 0L));
                 matcher = wrapper.getPattern().matcher(cur);
                 //System.out.println(wrapper.getPattern().toString());
                 System.out.println(cur);
@@ -53,10 +67,12 @@ public class Main {
                 log.setLine(line);
                 System.out.println("Line set.");
                 manager.insert(log);
+                manager.insert(count);
                 System.out.println("Row inserted.");
             }
         } catch(Exception ex) {
             System.out.println("Message: " + ex.getMessage());
+            ex.printStackTrace();
         }
     }
 }
