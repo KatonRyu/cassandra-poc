@@ -17,6 +17,9 @@ public class InfoCounter {
     @Column
     private Counter info;
 
+    @Column
+    private Counter debug;
+
     public InfoCounter() {
 
     }
@@ -36,4 +39,13 @@ public class InfoCounter {
     public void setInfo(Counter info) {
         this.info = info;
     }
+
+    public Counter getDebug() {
+        return debug;
+    }
+
+    public void setDebug(Counter debug) {
+        this.debug = debug;
+    }
+
 }

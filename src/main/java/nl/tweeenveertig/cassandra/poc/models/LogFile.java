@@ -1,6 +1,7 @@
 package nl.tweeenveertig.cassandra.poc.models;
 
 import info.archinnov.achilles.annotations.*;
+import info.archinnov.achilles.type.Counter;
 
 import java.util.Date;
 import java.util.UUID;
@@ -17,7 +18,6 @@ public class LogFile {
 
     @Column
     private String line;
-
 
     public static class CompoundKey {
         @PartitionKey

@@ -46,13 +46,20 @@ public class Main {
                 System.out.println("Counter made");
                 count.setName("log.txt-20.log");
                 Counter infoCount = count.getInfo() != null ? count.getInfo() : CounterBuilder.incr(0L);
+                Counter debugCount = count.getDebug() != null ? count.getDebug() : CounterBuilder.incr(0L);
                 System.out.println("Countinfo retrieved");
                 if(cur.contains("INFO")) {
-                    System.out.println("Attempting to update count");
+                    System.out.println("Attempting to update info count");
                     infoCount.incr();
-                    System.out.println("Count incremented");
+                    System.out.println("Info Count incremented");
+                }
+                if(cur.contains("DEBUG")) {
+                    System.out.println("Attempting to update debug count");
+                    debugCount.incr();
+                    System.out.println("Debug Count incremented");
                 }
                 count.setInfo(CounterBuilder.incr(infoCount.get() != null ? infoCount.get() : 0L));
+                count.setDebug(CounterBuilder.incr(debugCount.get() != null ? debugCount.get() : 0L));
                 matcher = wrapper.getPattern().matcher(cur);
                 //System.out.println(wrapper.getPattern().toString());
                 System.out.println(cur);
