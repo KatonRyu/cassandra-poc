@@ -20,15 +20,12 @@ public class LogFile {
     private String line;
 
     public static class CompoundKey {
-        @PartitionKey
         @Order(1)
         private String name;
 
-        @PartitionKey
         @Order(2)
         private Date time;
 
-        @PartitionKey
         @Order(3)
         private Date timestamp;
 

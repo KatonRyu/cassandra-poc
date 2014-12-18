@@ -7,6 +7,7 @@ import info.archinnov.achilles.type.Counter;
 import info.archinnov.achilles.type.CounterBuilder;
 import nl.tweeenveertig.cassandra.poc.models.InfoCounter;
 import nl.tweeenveertig.cassandra.poc.models.LogFile;
+import nl.tweeenveertig.cassandra.poc.service.SimpleService;
 import nl.tweeenveertig.cassandra.poc.util.LogFileRegexDateWrapper;
 import nl.tweeenveertig.cassandra.poc.util.LogFileRegexDateWrapper.LogFileType;
 
@@ -33,8 +34,9 @@ public class Main {
                 .forceTableCreation(true).build();
 
         PersistenceManager manager = pmf.createPersistenceManager();
+        SimpleService service = new SimpleService(manager);
 
-        LogFileRegexDateWrapper wrapper = new LogFileRegexDateWrapper(LogFileType.WEB, "(\\d{4}[-][0|1][0-2][-][0-3]\\d [0-2]\\d[:][0-5]\\d[:][0-5]\\d[,]\\d{3})", "yyyy-MM-dd HH:mm:ss,SSS");
+        LogFileRegexDateWrapper wrapper = new LogFileRegexDateWrapper(LogFileType.WEB, "([0-9]{4}[-][0|1][0-2][-][0-3][0-9] [0-2][0-9][:][0-5][0-9][:][0-5][0-9][,][0-9]{3})", "yyyy-MM-dd HH:mm:ss,SSS");
 
         try {
             BufferedReader br = Files.newBufferedReader(Paths.get("/home/thom/Documents/workspace/Cassandra-POC/cassandra-poc/src/main/resources/log.txt-20.log"), StandardCharsets.UTF_8);
@@ -73,8 +75,10 @@ public class Main {
                 System.out.println("Id set.");
                 log.setLine(line);
                 System.out.println("Line set.");
-                manager.insert(log);
-                manager.insert(count);
+                //manager.insert(log);
+                //manager.insert(count);
+                service.insert(log);
+                service.insert(count);
                 System.out.println("Row inserted.");
             }
         } catch(Exception ex) {
