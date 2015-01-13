@@ -36,7 +36,7 @@ public class Main {
         PersistenceManager manager = pmf.createPersistenceManager();
         SimpleService service = new SimpleService(manager);
 
-        LogFileRegexDateWrapper wrapper = new LogFileRegexDateWrapper(LogFileType.WEB, "([0-9]{4}[-][0|1][0-2][-][0-3][0-9] [0-2][0-9][:][0-5][0-9][:][0-5][0-9][,][0-9]{3})", "yyyy-MM-dd HH:mm:ss,SSS");
+        LogFileRegexDateWrapper wrapper = new LogFileRegexDateWrapper(LogFileType.WEB, "(\\d{4}[-][0|1][0-2][-][0-3]\\d [0-2]\\d[:][0-5]\\d[:][0-5]\\d[,]\\d{3})", "yyyy-MM-dd HH:mm:ss,SSS");
 
         try {
             BufferedReader br = Files.newBufferedReader(Paths.get("/home/thom/Documents/workspace/Cassandra-POC/cassandra-poc/src/main/resources/log.txt-20.log"), StandardCharsets.UTF_8);
@@ -63,14 +63,16 @@ public class Main {
                 count.setInfo(CounterBuilder.incr(infoCount.get() != null ? infoCount.get() : 0L));
                 count.setDebug(CounterBuilder.incr(debugCount.get() != null ? debugCount.get() : 0L));
                 matcher = wrapper.getPattern().matcher(cur);
+                System.err.println(matcher.find());
+                System.err.println(matcher.group());
                 //System.out.println(wrapper.getPattern().toString());
                 System.out.println(cur);
                 System.out.println("File made.");
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss,SSS");
-                String dateString = cur.substring(0, 24);
+                String dateString = matcher.group();
                 System.out.println("DateString: " + dateString);
-                Date date = df.parse(dateString);
-                String line = cur.substring(24);
+                Date date = wrapper.getDateFormat().parse(dateString);
+                String line = cur.substring(matcher.group().length());
                 log.setId(new LogFile.CompoundKey("log.txt-20.log", date, new Date()));
                 System.out.println("Id set.");
                 log.setLine(line);
@@ -79,6 +81,7 @@ public class Main {
                 //manager.insert(count);
                 service.insert(log);
                 service.insert(count);
+                service.insert(new Object());
                 System.out.println("Row inserted.");
             }
         } catch(Exception ex) {

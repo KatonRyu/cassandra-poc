@@ -1,5 +1,6 @@
 package nl.tweeenveertig.cassandra.poc.repository;
 
+import info.archinnov.achilles.exception.AchillesException;
 import info.archinnov.achilles.persistence.PersistenceManager;
 
 /**
@@ -14,6 +15,10 @@ public class SimpleRepo {
     }
 
     public void insertData(Object entity) {
-        manager.insert(entity);
+       try {
+           manager.insert(entity);
+       } catch(AchillesException ex) {
+           System.out.println("Object " + entity.toString() + " is not managed by Achilles and was not inserted.");
+       }
     }
 }
