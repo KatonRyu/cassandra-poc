@@ -9,9 +9,9 @@ import java.util.regex.Pattern;
 public class LogFileRegexDateWrapper {
 
     public enum LogFileType {
-        AUTH,
-        SYS,
-        WEB
+        SINGLE,
+        BLOCK,
+        TIMELESS
     }
 
     private LogFileType type;

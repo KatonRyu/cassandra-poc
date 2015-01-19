@@ -36,7 +36,7 @@ public class Main {
         PersistenceManager manager = pmf.createPersistenceManager();
         SimpleService service = new SimpleService(manager);
 
-        LogFileRegexDateWrapper wrapper = new LogFileRegexDateWrapper(LogFileType.WEB, "(\\d{4}[-][0|1][0-2][-][0-3]\\d [0-2]\\d[:][0-5]\\d[:][0-5]\\d[,]\\d{3})", "yyyy-MM-dd HH:mm:ss,SSS");
+        LogFileRegexDateWrapper wrapper = new LogFileRegexDateWrapper(LogFileType.SINGLE, "(\\d{4}[-][0|1][0-2][-][0-3]\\d [0-2]\\d[:][0-5]\\d[:][0-5]\\d[,]\\d{3})", "yyyy-MM-dd HH:mm:ss,SSS");
 
         try {
             BufferedReader br = Files.newBufferedReader(Paths.get("/home/thom/Documents/workspace/Cassandra-POC/cassandra-poc/src/main/resources/log.txt-20.log"), StandardCharsets.UTF_8);
